@@ -1,9 +1,18 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.5">
   <diagram name="Page-1" id="EFxmghk9GnBiTSpVaYUJ">
-    <mxGraphModel>
+    <mxGraphModel dx="1715" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="SmnWdv0_qvQ2UJ-YlQ_u-2" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 175, 0)); font-size: 19px;&quot;&gt;pipex&lt;/font&gt;" style="text;align=center;fontStyle=1;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;" vertex="1" parent="1">
+          <mxGeometry x="349" y="10" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="SmnWdv0_qvQ2UJ-YlQ_u-3" value="firstly we need to know what is process&amp;nbsp;&lt;div style=&quot;&quot;&gt;in a process is in section of action preform&amp;nbsp;in code&amp;nbsp; for a specific task&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-800" y="20" width="280" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SmnWdv0_qvQ2UJ-YlQ_u-4" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Fork&lt;/h1&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-413" y="50" width="180" height="120" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
