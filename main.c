@@ -40,6 +40,5 @@ int main(int ac, char **av)//, char **ev)
 
 		//everthing are between those files are command "mindatory only 2 command"
 
-		
 	}
 }
