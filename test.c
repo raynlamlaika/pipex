@@ -126,6 +126,11 @@ int main(int ac, char **av, char **ev)
 	
 	printf("\n\t----- to the pipe function -----\n");
 	// first the prototype of the pipe is int pipe(int pipefd[2]);
+	
+	
+	
+	
+	
 	int fd[2];
 	if (pipe(fd) == -1)
 		return (write(1,"the pipe is faillld \n", 22), 0);
@@ -137,17 +142,20 @@ int main(int ac, char **av, char **ev)
 		write(fd[1], "kifach\n", 8);
 		printf("this is the val of fd[1] :%d\nand the fd[0]:%d\n", fd[1], fd[0]);
 		printf("hada child process\n");
-		return(0);
 	}
 	else 
 		printf("4ALAAT\n");
 	//printf("hada w ------ewew \n");
-	//waitpid(pid, NULL, 0);
+	// waitpid(pid, NULL, 0);
 	char buff[8];
 	read(fd[0], buff, 8);
 	printf("thsiis the buffer the we pipe from the child :%s\n", buff);
 	// it writing it twice cuz of the fork the we do creat in tow proccess
 	//exit(0);
+
+
+	printf("\n\t----- to the fork function -----\n");
+
 }
 
 
