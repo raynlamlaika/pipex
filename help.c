@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   help.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/22 16:07:40 by rlamlaik         ###   ########.fr       */
+/*   Created: 2025/01/22 16:02:54 by rlamlaik          #+#    #+#             */
+/*   Updated: 2025/01/22 16:02:59 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef PIPEX_H
-#  define PIPEX_H
+#include "pipex.h"
 
+int	ft_strncmp(const char *str1, const char *str2, size_t num)
+{
+	size_t	i;
 
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-#include <sys/wait.h>
- 
-char	**ft_split(char const *s, char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-int     ft_strncmp(const char *str1, const char *str2, size_t num);
-
-#endif
+	i = 0;
+	while (i < num && (str1[i] || str2[i]))
+	{
+		if (str1[i] != str2[i])
+			return ((unsigned char)str1[i] - (unsigned char)str2[i]);
+		i++;
+	}
+	return (0);
+}

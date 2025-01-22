@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:52:47 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/22 15:50:41 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/22 20:58:10 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**takepath(char** env)
 	int i = 0;
 	while (env[enc])
 	{
-		if (strncmp("PATH=", env[enc],5) == 0)
+		if (ft_strncmp("PATH=", env[enc], 5) == 0)
 			break ;
 		enc++;
 	}
@@ -54,6 +54,7 @@ char	*pick(char **path,char* cmd)
 		realpath = ft_strjoin(path[pass], cmd);
 		if (access(realpath, X_OK) == 0)
 			return(realpath);
+		free(realpath);
 		pass++;
 	}
 	return (NULL);
@@ -78,7 +79,6 @@ int main(int ac , char **av, char **ev)
 			return(write(2, "Piipeee makhadamach\n", 21), 0);
 		pid = fork();
 		path = takepath(ev);
-		
 		if(pid == 0)
 		{
 			close(pipefd[0]);
@@ -101,7 +101,11 @@ int main(int ac , char **av, char **ev)
 			close(pipefd[1]);
 			dup2(pipefd[0], STDIN_FILENO);
 			dup2(outfile, STDOUT_FILENO);
-			// printf("this is the in :pipfd[1]:%d\n\
+			char dsds[100];
+			read(infile, dsds,24);
+			write(2,dsds, 24);
+			write(2, "\n\n",2);
+			// printf("this is the in :pipfd[1]:%d\n
 			// this is the outfile:%d", pipefd[1], outfile);
 			lavraipath = pick(path, av[3]);
 			if(!lavraipath)
