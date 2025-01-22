@@ -141,7 +141,7 @@ int main(int ac, char **av, char **ev)
 		// so rn if fork isn't fialed we are in child proccess
 		write(fd[1], "kifach\n", 8);
 		printf("this is the val of fd[1] :%d\nand the fd[0]:%d\n", fd[1], fd[0]);
-		printf("hada child process\n");
+		//printf("hada child process\n");
 	}
 	else 
 		printf("4ALAAT\n");
@@ -154,7 +154,28 @@ int main(int ac, char **av, char **ev)
 	//exit(0);
 
 
-	printf("\n\t----- to the fork function -----\n");
+	printf("\n\t----- to the fork function -----\n\n\n");
+	// no need right now it just creat in child prcess that i will pic more in the the draw
+
+	printf("\n\t----- to the execve function -----\n");
+	// is in function to aplic the bash script one big thing that u may need to know
+	// is that execve it replace the full procces with the thing that he need to execute
+
+	// the prototypee int execve(path to the command, that inpuut for the command , the everonment);
+	//
+
+
+
+// 	char *const envp[]:
+
+// This is the environment vector, an array of strings representing the environment variables for the new program.
+// Each string in the array should be of the form KEY=VALUE, e.g., "PATH=/usr/bin".
+// Pass NULL if you want the new program to inherit the parent process's environment.
+	char * const yy[] = {"/usr/bin/echo", "HELLLO\n", NULL};
+	printf("-p-p-p-p-p-\n");
+	execve("/usr/bin/echo", yy, NULL);
+	printf ("wvw\n");
+
 
 }
 
@@ -195,4 +216,134 @@ int main(int ac, char **av, char **ev)
 8. Fermer les fichiers ouverts.
 
 9. Quitter le programme.
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+#include "pipex.h"
+
+char **takepath(char **env)
+{
+    char *pathstr;
+    char **back;
+    int enc = 0;
+
+    while (env[enc])
+    {
+        if (strncmp("PATH=", env[enc], 5) == 0)
+            break;
+        enc++;
+    }
+
+    if (!env[enc]) // PATH not found
+        return (NULL);
+
+    pathstr = env[enc] + 5;
+    back = ft_split(pathstr, ':');
+    for (int i = 0; back[i]; i++)
+    {
+        char *temp = back[i];
+        back[i] = ft_strjoin(back[i], "/");
+        free(temp);
+    }
+    return (back);
+}
+
+char *pick(char **path, char *cmd)
+{
+    int pass = 0;
+    char *realpath;
+
+    while (path[pass])
+    {
+        realpath = ft_strjoin(path[pass], cmd);
+        if (access(realpath, X_OK) == 0)
+            return (realpath);
+        free(realpath);
+        pass++;
+    }
+    return (NULL);
+}
+
+int main(int ac, char **av, char **ev)
+{
+    int pipefd[2];
+    pid_t pid;
+    char **path;
+    char *lavraipath;
+    int infile, outfile;
+
+    if (ac == 5)
+    {
+        infile = open(av[1], O_RDONLY);
+        if (infile < 0)
+            return (perror("Error opening infile"), 1);
+
+        outfile = open(av[4], O_RDWR | O_CREAT | O_APPEND, 0644);
+        if (outfile < 0)
+            return (perror("Error opening outfile"), 1);
+
+        if (pipe(pipefd) == -1)
+            return (perror("Pipe failed"), 1);
+
+        path = takepath(ev);
+        if (!path)
+            return (write(2, "PATH not found\n", 15), 1);
+
+        pid = fork();
+        if (pid < 0)
+            return (perror("Fork failed"), 1);
+
+        if (pid == 0) // Child process
+        {
+            close(pipefd[0]);
+            dup2(infile, STDIN_FILENO);
+            dup2(pipefd[1], STDOUT_FILENO);
+            close(pipefd[1]);
+            close(infile);
+
+            lavraipath = pick(path, av[2]);
+            if (!lavraipath)
+                return (write(2, "Command not found\n", 18), 1);
+
+            char *const mesage[] = {av[2], NULL};
+            execve(lavraipath, mesage, ev);
+            perror("Execve failed");
+            exit(1);
+        }
+        else // Parent process
+        {
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+            dup2(outfile, STDOUT_FILENO);
+            close(pipefd[0]);
+            close(outfile);
+
+            lavraipath = pick(path, av[3]);
+            if (!lavraipath)
+                return (write(2, "Command not found for parent\n", 29), 1);
+
+            char *const fff[] = {av[3], NULL};
+            execve(lavraipath, fff, ev);
+            perror("Execve failed");
+            exit(1);
+        }
+    }
+    return (0);
+}
+
+
 */

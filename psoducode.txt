@@ -1,0 +1,67 @@
+FUNCTION main(argc, argv, envp)
+    IF argc != 5 THEN
+        PRINT "Usage: ./pipex file1 cmd1 cmd2 file2"
+        EXIT FAILURE
+    ENDIF
+
+    // Parse PATH environment variable
+    paths = take_path(envp)  
+
+    // Open input (file1) and output (file2) files
+    input_fd = open(argv[1], O_RDONLY)
+    IF input_fd < 0 THEN
+        PRINT "Error opening file1"
+        EXIT FAILURE
+    ENDIF
+
+    output_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644)
+    IF output_fd < 0 THEN
+        PRINT "Error opening file2"
+        EXIT FAILURE
+    ENDIF
+
+    // Create pipe
+    pipe_fd = pipe()
+    IF pipe_fd < 0 THEN
+        PRINT "Error creating pipe"
+        EXIT FAILURE
+    ENDIF
+
+    // Fork and execute first command
+    pid1 = fork()
+    IF pid1 == 0 THEN
+        close(pipe_fd[0])            // Close read end
+        dup2(input_fd, STDIN_FILENO) // Redirect input
+        dup2(pipe_fd[1], STDOUT_FILENO) // Redirect output to pipe
+        close(pipe_fd[1])
+
+        cmd1_path = pick_command_path(paths, argv[2]) // Find cmd1 in PATH
+        EXECVE(cmd1_path, split_command(argv[2]), envp) // Execute cmd1
+        PRINT "Error executing cmd1"
+        EXIT FAILURE
+    ENDIF
+
+    // Fork and execute second command
+    pid2 = fork()
+    IF pid2 == 0 THEN
+        close(pipe_fd[1])            // Close write end
+        dup2(pipe_fd[0], STDIN_FILENO) // Redirect input from pipe
+        dup2(output_fd, STDOUT_FILENO) // Redirect output to file
+        close(pipe_fd[0])
+
+        cmd2_path = pick_command_path(paths, argv[3]) // Find cmd2 in PATH
+        EXECVE(cmd2_path, split_command(argv[3]), envp) // Execute cmd2
+        PRINT "Error executing cmd2"
+        EXIT FAILURE
+    ENDIF
+
+    // Parent Process: Close all and wait
+    close(pipe_fd[0])
+    close(pipe_fd[1])
+    close(input_fd)
+    close(output_fd)
+    WAIT for pid1
+    WAIT for pid2
+
+    RETURN 0
+END FUNCTION

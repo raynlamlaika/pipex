@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:52:47 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/21 18:44:41 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:50:41 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,39 @@ char	**takepath(char** env)
 	int		enc;
 
 	enc = 0;
-	pathstr = env[76] + 5;
+	int i = 0;
+	while (env[enc])
+	{
+		if (strncmp("PATH=", env[enc],5) == 0)
+			break ;
+		enc++;
+	}
+	if (!env[enc])
+        return (NULL);
+	pathstr = env[enc] + 5;
+	enc = 0;
 	back = ft_split(pathstr, ':');
 	while (back[enc])
 	{
+		
 		back[enc] = ft_strjoin(back[enc] , "/");
 		enc++;
+
 	}
 	return(back);
 }
 
-char	*pick(char **path,int ac, char ** av)
+char	*pick(char **path,char* cmd)
 {
 	int		pass;
 	char	*realpath;
 
 	pass = 0;
+
 	while (path[pass])
 	{
-		realpath = ft_strjoin(path[pass], av[3]);
+		
+		realpath = ft_strjoin(path[pass], cmd);
 		if (access(realpath, X_OK) == 0)
 			return(realpath);
 		pass++;
@@ -48,24 +62,54 @@ char	*pick(char **path,int ac, char ** av)
 int main(int ac , char **av, char **ev)
 {
 	int		pipefd[2];
-	int		pid;
+	pid_t	pid;
 	char	**path;
 	char	*lavraipath;
+	int		infile;
+	int		outfile;
 
-	
 	if (ac == 5)
 	{
-		pid = fork();
+		infile = open(av[1], O_RDONLY);
+		outfile = open(av[4], O_RDWR | O_CREAT | O_APPEND);
+		if (infile < 0 || outfile < 0)
+			return (perror("Error opening file"), 1);
 		if (pipe(pipefd) == -1)
-			return(write(2, "Foooork makhadamach\n", 21), 0);
+			return(write(2, "Piipeee makhadamach\n", 21), 0);
+		pid = fork();
+		path = takepath(ev);
+		
 		if(pid == 0)
 		{
-			path = takepath(ev);
-			lavraipath = pick(path, ac, av);
-			printf("c\'est la vrai path :%s\n", lavraipath);
+			close(pipefd[0]);
+			dup2(infile, STDIN_FILENO);
+			dup2(pipefd[1],STDOUT_FILENO);
+			close(pipefd[1]);
+			close(infile);
+			// printf("thisis i %s\n", path[0]);
+			// printf("the real path %s\n", lavraipath);
+			lavraipath = pick(path,av[2]);
+			if(!lavraipath)
+				return (write(2, "lavrai path makinach1\n", 23), 0);
+			if (!lavraipath)
+				return (write(1, "lavraie pathd zape\n", 20), 0);
+			char *const mesage[] = {av[2], NULL};
+			execve(lavraipath, mesage, NULL);
 		}
-
-		exit(EXIT_SUCCESS);
+		else
+		{
+			close(pipefd[1]);
+			dup2(pipefd[0], STDIN_FILENO);
+			dup2(outfile, STDOUT_FILENO);
+			// printf("this is the in :pipfd[1]:%d\n\
+			// this is the outfile:%d", pipefd[1], outfile);
+			lavraipath = pick(path, av[3]);
+			if(!lavraipath)
+				return (write(2, "lavrai path makinach2\n", 23), 0);
+			char *const fff[] = {av[3], NULL};
+			execve(lavraipath, fff, ev);
+			perror("Execve failed");
+		}
 	}
-    return (0);
+	return (0);
 }
