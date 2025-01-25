@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:52:47 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/22 20:58:10 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/25 14:19:44 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,14 +60,23 @@ char	*pick(char **path,char* cmd)
 	return (NULL);
 }
 
+char **cmdparce(char **av)
+{
+	char **take;
+
+	take = ft_split(av[2], ' ');
+	return (take);
+}
+
 int main(int ac , char **av, char **ev)
 {
-	int		pipefd[2];
-	pid_t	pid;
-	char	**path;
-	char	*lavraipath;
-	int		infile;
-	int		outfile;
+	int			pipefd[2];
+	int			pid;
+	char		**path;
+	char		*lavraipath;
+	int			infile;
+	int			outfile;
+	char* const	*command;
 
 	if (ac == 5)
 	{
@@ -81,36 +90,29 @@ int main(int ac , char **av, char **ev)
 		path = takepath(ev);
 		if(pid == 0)
 		{
-			close(pipefd[0]);
+			// close(pipefd[0]);
 			dup2(infile, STDIN_FILENO);
-			dup2(pipefd[1],STDOUT_FILENO);
-			close(pipefd[1]);
+			dup2(pipefd[1], STDOUT_FILENO);
+			command = cmdparce(av);
+			lavraipath = pick(path, command[0]);
 			close(infile);
-			// printf("thisis i %s\n", path[0]);
-			// printf("the real path %s\n", lavraipath);
-			lavraipath = pick(path,av[2]);
 			if(!lavraipath)
 				return (write(2, "lavrai path makinach1\n", 23), 0);
 			if (!lavraipath)
 				return (write(1, "lavraie pathd zape\n", 20), 0);
-			char *const mesage[] = {av[2], NULL};
-			execve(lavraipath, mesage, NULL);
+			execve(lavraipath, command, NULL);
 		}
 		else
 		{
 			close(pipefd[1]);
+			close(infile);
 			dup2(pipefd[0], STDIN_FILENO);
 			dup2(outfile, STDOUT_FILENO);
-			char dsds[100];
-			read(infile, dsds,24);
-			write(2,dsds, 24);
-			write(2, "\n\n",2);
-			// printf("this is the in :pipfd[1]:%d\n
-			// this is the outfile:%d", pipefd[1], outfile);
 			lavraipath = pick(path, av[3]);
 			if(!lavraipath)
 				return (write(2, "lavrai path makinach2\n", 23), 0);
 			char *const fff[] = {av[3], NULL};
+			wait(NULL);
 			execve(lavraipath, fff, ev);
 			perror("Execve failed");
 		}

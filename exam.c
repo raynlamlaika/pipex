@@ -34,35 +34,17 @@ int ft_atoi(char *str)
 
 int main(int ac , char **av)
 {
-    int i = 2;
-    if (ac == 2)
+    int i = 1;
+    if (ac  > 1)
     {
         int j = 0;
-        if (av[1])
+        while (av[1][j])
         {
-            while (av[1][j])
-            {
-                if (av[1][j != '_'])
-                    j++;
-            }   
-            char *re=  malloc(j);
-            if(!re)
-                return (0);
-            j = 0;
-            while(av[1][j])
-            {
-                if(av[1][j] == _)
-                    j++;
-                    if(av[1][j] != '_' && (av[1][j] >= && av[1][j] <= ))
-                        write();
-
-
-            }
-
+            while (av[1][j] == ' ' && (av[1][j+1])== ' ')
+                j++;
+            write(1, &av[1][j], 1);
+            j++;
         }
-
-
-
     }
-    write(1, "\n", 1);
+    return(write(1, "\n", 1), 0);
 }
