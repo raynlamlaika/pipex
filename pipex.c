@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/26 19:02:45 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/26 21:21:11 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,11 @@ int main (int ac, char **av, char **ev)
 		return (write(2, "fork failed\n", 13), 0);
 	if(pid == 0)
 		firstcmd(av, paths, pipfd);
-	else 
+	else if (fork() == 0)
 	{
-		outfile = open(av[4], O_TRUNC | O_APPEND | O_RDWR, 0644);
+		outfile = open(av[4], O_CREAT | O_TRUNC | O_APPEND | O_RDWR, 0644);
 		if (outfile == -1)
-			return (write(1, "open failed 1\n", 15), 0);
+			return (write(1, "open fAiled 1\n", 15), 0);
 		if (dup2(pipfd[0], STDIN_FILENO) == -1 ||dup2(outfile, STDOUT_FILENO) == -1)
 			return (0);
 		close(pipfd[1]);
@@ -116,9 +116,13 @@ int main (int ac, char **av, char **ev)
 		path = pick(paths, cmd[0]);
 		if (!path)
 			return (write(2, "path not reached\n", 18), 0);
-		wait(NULL);
 		execve(path, cmd, ev);
+		exit(0);
 	}
+	close(pipfd[0]);
+	close(pipfd[1]);
+	wait(NULL);
+	wait(NULL);
 	return (0);
 }
 
