@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/25 19:25:17 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/26 19:02:45 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,13 @@ char	*pick(char **path,char* cmd)
 	char	*realpath;
 
 	pass = 0;
-
+	
+	if (ft_strrchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return(cmd);
+		return (NULL);
+	}
 	while (path[pass])
 	{
 		
@@ -100,7 +106,7 @@ int main (int ac, char **av, char **ev)
 		firstcmd(av, paths, pipfd);
 	else 
 	{
-		outfile = open(av[4], O_APPEND | O_CREAT | O_RDWR, 0644);
+		outfile = open(av[4], O_TRUNC | O_APPEND | O_RDWR, 0644);
 		if (outfile == -1)
 			return (write(1, "open failed 1\n", 15), 0);
 		if (dup2(pipfd[0], STDIN_FILENO) == -1 ||dup2(outfile, STDOUT_FILENO) == -1)
@@ -109,7 +115,7 @@ int main (int ac, char **av, char **ev)
 		char **cmd= ft_split(av[3], ' ');
 		path = pick(paths, cmd[0]);
 		if (!path)
-			return (write(1, "wewe\n", 5), 0);
+			return (write(2, "path not reached\n", 18), 0);
 		wait(NULL);
 		execve(path, cmd, ev);
 	}
