@@ -27,5 +27,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 int     ft_strncmp(const char *str1, const char *str2, size_t num);
 char	*ft_strrchr(const char *str, int c);
 size_t	ft_strlen(const char *str);
+char	**takepaths(char **env);
+char	*pick(char**path, char*cmd);
 
 #endif

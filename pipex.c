@@ -12,57 +12,6 @@
 
 #include "pipex.h"
 
-char	**takepaths(char **env)
-{
-	char	*pathstr;
-	char	**back;
-	int		enc;
-
-	if (!env)
-		exit(EXIT_FAILURE);
-	enc = 0;
-	while (env[enc])
-	{
-		if (ft_strncmp("PATH=", env[enc], 5) == 0)
-			break ;
-		enc++;
-	}
-	if (!env[enc])
-		return (NULL);
-	pathstr = env[enc] + 5;
-	enc = 0;
-	back = ft_split(pathstr, ':');
-	while (back[enc])
-	{
-		back[enc] = ft_strjoin(back[enc], "/");
-		enc++;
-	}
-	return (back);
-}
-
-char	*pick(char**path, char*cmd)
-{
-	int		pass;
-	char	*realpath;
-
-	pass = 0;
-	if (ft_strrchr(cmd, '/'))
-	{
-		if (access(cmd, X_OK) == 0)
-			return (cmd);
-		return (NULL);
-	}
-	while (path[pass])
-	{
-		realpath = ft_strjoin(path[pass], cmd);
-		if (access(realpath, X_OK) == 0)
-			return (realpath);
-		free(realpath);
-		pass++;
-	}
-	return (NULL);
-}
-
 void	firstcmd(char **av, char **paths, int *pipfd)
 {
 	char	**cmd;
@@ -115,7 +64,7 @@ int	main(int ac, char**av, char**ev)
 		cmd = ft_split(av[3], ' ');
 		path = pick(paths, cmd[0]);
 		if (!path)
-			return (write(2, "path not reached\n", 18), 0);
+			return (write(2, "path | command not reached\n", 27), 0);
 		execve(path, cmd, ev);
 		exit(0);
 	}
