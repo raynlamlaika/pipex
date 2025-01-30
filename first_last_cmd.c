@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:41:36 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/29 20:41:30 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/01/30 17:57:48 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	first_command(char **av, char **paths, int *pipfd)
 	if (!path)
 		return ;
 	execve(path, cmd, NULL);
+	exit(1);
 	return ;
 }
 
