@@ -1,1 +1,5 @@
-f
+Makefile
+a.out
+exam.c
+first_last_cmd.c
+first_last_cmd.o
