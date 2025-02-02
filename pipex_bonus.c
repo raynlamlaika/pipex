@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/30 20:32:40 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/02 16:28:47 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	check_command(int ac, char **av, char**path)
 	i = ac - 2;
 	while (i > 1)
 	{
-		cmm = ft_split(av[i], ' ');
+		cmm = split(av[i]);
 		cmd = pick(path, cmm[0]);
 		if (!cmd)
 		{
@@ -43,7 +43,7 @@ int	executing(int prev_pipe, char** av, int j, char **paths, int outfile)
 			(dup2(outfile, STDOUT_FILENO) == -1))
 			return (write(2, "dup2 failed\n", 12), 0);
 		close(outfile);
-		command = ft_split(av[j], ' ');
+		command = split(av[j]);
 		path = pick(paths, av[j]);
 		execve(path, command, NULL);
 		exit(1);
@@ -59,6 +59,7 @@ int main(int ac, char **av, char **ev)
 	int		i;
 	int		prev_pipe;
 
+
 	if (pipe(pipefd) == -1)
 		return (write(2, "pipe filed\n", 12), 0);
 	if (ac < 5)
@@ -66,27 +67,33 @@ int main(int ac, char **av, char **ev)
 	paths = takepaths(ev);
 	if (!paths)
 		return(write(2, "path error\n", 12), 0);
-	i = ac - 3;
-	int j = 3;
-	if (fork() == 0)
-		first_command(av, paths, pipefd);
-	prev_pipe = pipefd[0];
-	close(pipefd[1]);
-	while(j - 1 != i)
-	{
-		if (pipe(pipefd) == -1)
-			return (write(2, "pipe filed\n", 12), 0);
-		executing(prev_pipe, av, j, paths, pipefd[1]);
-		close(pipefd[1]);
-		prev_pipe = pipefd[0];
-		j++;
+	int infile = open(av[1], O_RDONLY);
+	int outfile = open(av[(ac - 1)], O_CREAT | O_TRUNC | O_APPEND | O_RDWR, 0644);
+	if (infile == -1 || outfile == -1)
+		return (write(2, "no infile/outfile of waht \n", 27), 0);
+	i = 1;
+    while (i < ac - 2)
+    {
+		if (i == 1)
+			if (fork() == 0)
+			{
+				first_command(av, paths, pipefd);
+				prev_pipe = pipefd[0];
+			}
+		else 
+		{
+			if (pipe(pipefd) == -1)
+				return (write(2, "pipe failed\n", 12), 0);
+			executing(prev_pipe, av, i, paths, pipefd[1]);
+			fprintf(stderr, "thisis the av file || cnmd [%s] and [%d] \n", av[i], i);
+		}
+		i++;
 	}
-	close(pipefd[1]);
-	if (fork() == 0)
-		last_commmand(ac, av, ev, paths, pipefd);
-	close(pipefd[0]);
-	wait(NULL);
-	return (0);
+    executing(prev_pipe, av, i, paths, outfile);
+    close(prev_pipe);
+    close(outfile);
+    wait(NULL);
+    return (0);
 }
 
 

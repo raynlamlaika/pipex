@@ -1,5 +1,5 @@
 NAME=pipex
-SRC= pipex.c help.c ft_strjoin.c ft_split.c
+SRC= pipex.c help.c ft_strjoin.c split.c first_last_cmd.c ft_split.c
 OBJ=$(SRC:.c=.o)
 CC=cc
 CFLAGS=-Wall -Werror -Wextra

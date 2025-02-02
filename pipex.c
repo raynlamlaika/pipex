@@ -6,13 +6,13 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/29 10:08:16 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/02 15:22:45 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	firstcmd(char **av, char **paths, int *pipfd)
+void	firstcmd(char **av, char **paths, int *pipfd)
 {
 	char	**cmd;
 	char	*path;
@@ -24,7 +24,7 @@ static void	firstcmd(char **av, char **paths, int *pipfd)
 	if (dup2(infile, STDIN_FILENO) == -1 || \
 	dup2(pipfd[1], STDOUT_FILENO) == -1)// FD for write
 		return ;
-	cmd = ft_split(av[2], ' ');
+	cmd = split(av[2]);
 	path = pick(paths, cmd[0]);
 	close(infile);
 	if (!path)
@@ -33,7 +33,7 @@ static void	firstcmd(char **av, char **paths, int *pipfd)
 	return ;
 }
 
-static int	last_cmmd( char**av,char **ev, char** paths, int *pipfd)
+int	last_cmmd( char**av,char **ev, char** paths, int *pipfd)
 {
 	int		outfile;
 	char	**cmd;
@@ -47,7 +47,7 @@ static int	last_cmmd( char**av,char **ev, char** paths, int *pipfd)
 		return (0);
 	close(pipfd[1]);
 	close(outfile);
-	cmd = ft_split(av[3], ' ');
+	cmd = split(av[3]);
 	path = pick(paths, cmd[0]);
 	if (!path)
 		return (write(2, "path | command not reached\n", 27), 0);
@@ -74,7 +74,7 @@ int	main(int ac, char**av, char**ev)
 	else if (fork() == 0)
 		last_cmmd(av, ev, paths, pipfd);
 	close(pipfd[0]);
-	// close(pipfd[1]);
+	close(pipfd[1]);
 	wait(NULL);
 	return (0);
 }

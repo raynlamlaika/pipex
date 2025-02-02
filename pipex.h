@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/29 15:49:26 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/02 16:17:22 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	**takepaths(char **env);
 char	*pick(char**path, char*cmd);
 void	first_command(char **av, char **paths, int *pipfd);
 int		last_commmand(int ac,char**av,char **ev, char** paths, int *pipfd);
+char    **split(char *str);
 
 #endif
