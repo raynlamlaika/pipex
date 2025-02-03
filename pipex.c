@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/02 15:22:45 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/03 20:23:08 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,19 @@ void	firstcmd(char **av, char **paths, int *pipfd)
 	if (infile < 0)
 		return ;
 	if (dup2(infile, STDIN_FILENO) == -1 || \
-	dup2(pipfd[1], STDOUT_FILENO) == -1)// FD for write
+	dup2(pipfd[1], STDOUT_FILENO) == -1)
 		return ;
 	cmd = split(av[2]);
 	path = pick(paths, cmd[0]);
 	close(infile);
+	close(pipfd[0]);
 	if (!path)
 		return ;
 	execve(path, cmd, NULL);
 	return ;
 }
 
-int	last_cmmd( char**av,char **ev, char** paths, int *pipfd)
+int	last_cmmd(char**av, char **ev, char**paths, int *pipfd)
 {
 	int		outfile;
 	char	**cmd;
@@ -75,6 +76,7 @@ int	main(int ac, char**av, char**ev)
 		last_cmmd(av, ev, paths, pipfd);
 	close(pipfd[0]);
 	close(pipfd[1]);
+	wait(NULL);
 	wait(NULL);
 	return (0);
 }

@@ -1,0 +1,81 @@
+
+
+
+# BACK2BACK File Descriptor
+
+each process in Lunix has in  Process control block PCB contine meta data about the process
+
+File descriptor in array of pointers maintained per process
+File Descriptor Table:
+    +----+------------+
+    | FD | File Struct |
+    +----+------------+
+    |  0 | -> stdin    |
+    |  1 | -> stdout   |
+    |  2 | -> stderr   |
+    +----+------------+
+
+the File table:
+Process Table
+   └── File Descriptor Table (Per Process)
+         └── File Table (Kernel-Wide)
+               └── Inode Table (Kernel-Wide)
+
+the FILE STRUCTURE are showing as follow:
+struct file {
+    struct path f_path;        // Path of the file
+    const struct file_operations *f_op; // I/O operations
+    unsigned int f_flags;      // File status flags (e.g., read/write)
+    atomic_t f_count;          // Reference count for sharing
+};
+
+and the STRUCTURE UINODE also showing as follow
+struct inode {
+    unsigned long i_ino;           // Inode number
+    struct super_block *i_sb;      // Superblock pointer
+    struct file_operations *i_fop; // File operations for this inode
+};
+
+
+The DUP and DUP2(syscall):
+both of those functions takes in  oldfd
+the main deffrenete is that the dup make the oldfd and it return the smallest fd value "smallest ree one"
+and ythe dup2 take in a ttow args old fd and the new one that you give to repalce with
+
+
+
+
+the PIPE function:
+
+it's in function allow communication for interrelated processes
+If the parent wants to send information to the child, 
+it would have to first send the data to the "Write" end of the pipe.
+The child process would then read the data contained in the pipe from the "Read" end.
+
+and the pipe offer only uni-directional communication channel
+that is in single pipe only one write, and the other read, it can't not do both  of them 
+simulataaneously read and wite into the pipe
+
+THE PATH WORKING PIPE
+1. it's a systeme call for the kernal it creat in pipe object (essentially a memory BUFFER in kernel space)
+2. it creat tow file descriptors (are we work in one for the read 'FD[0]' and other for write'FD[1]')
+3. the kernal buffer allocate a pipe buffer in memory (64KB size on lunix)
+4. the pipe manage manages synchronization between the read and write ends.
+5. (if the pipe is full , write() will block util there is a space also the read  until the data avalible)
+
+
+
+WAIT && WAITIPD:
+both are in system call it can wait for apresse by pass the int who represent the presecce
+when in child process termenate it he pass in SIGCHLD signal to his parent
+
+what steps of work flow of wiat 
+-Parent Process Calls wait() :Parent stops and waits for any child process to terminate.
+-Kernel Scans Process Table: Checks if any child has already finished.
+-If No Child Terminated: Parent process is blocked (put to sleep) until a child exits.
+-Child Terminates: Kernel wakes up the parent process and sends the child's exit status.
+-Reaping: Kernel cleans up child process resources and prevents zombie processes.
+-Return: wait() returns the PID of the terminated child, along with its exit status.
+
+
+//unlink 
