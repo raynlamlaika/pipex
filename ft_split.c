@@ -23,12 +23,12 @@ static size_t	count_word(char const *str, char c)
 		return (0);
 	while (*str)
 	{
-		if ((*str != c && *str  != '\'')&& o == 0)
+		if ((*str != c) && o == 0)
 		{
 			o = 1;
 			i++;
 		}
-		else if (*str == c || *str =='\'')
+		else if (*str == c)
 			o = 0;
 		str++;
 	}
@@ -42,7 +42,7 @@ static size_t	lenght(char const *str, char c)
 	i = 0;
 	if (!str)
 		return (0);
-	while (*str && *str != c && *str != '\'')
+	while (*str && *str != c)
 	{
 		i++;
 		str++;

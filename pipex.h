@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/02 16:17:22 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/04 18:04:56 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strncmp(const char *str1, const char *str2, size_t num);
 char	*ft_strrchr(const char *str, int c);
 size_t	ft_strlen(const char *str);
-char	**takepaths(char **env);
+char	**takepaths(char **env, int enc);
 char	*pick(char**path, char*cmd);
 void	first_command(char **av, char **paths, int *pipfd);
-int		last_commmand(int ac,char**av,char **ev, char** paths, int *pipfd);
 char    **split(char *str);
+void	clean_2(char **ptr);
 
 #endif

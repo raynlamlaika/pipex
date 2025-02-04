@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/03 20:23:08 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/04 18:04:43 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	main(int ac, char**av, char**ev)
 		exit(EXIT_FAILURE);
 	if (pipe(pipfd) == -1)
 		return (0);
-	paths = takepaths(ev);
+	paths = takepaths(ev, 0);
 	pid = fork();
 	if (pid == -1)
 		return (write(2, "fork failed\n", 13), 0);
@@ -74,6 +74,7 @@ int	main(int ac, char**av, char**ev)
 		firstcmd(av, paths, pipfd);
 	else if (fork() == 0)
 		last_cmmd(av, ev, paths, pipfd);
+	clean_2(paths);
 	close(pipfd[0]);
 	close(pipfd[1]);
 	wait(NULL);

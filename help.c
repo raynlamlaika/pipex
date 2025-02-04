@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 16:02:54 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/02 15:28:05 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/04 18:07:46 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,14 @@ char	*ft_strrchr(const char *str, int c)
 		return (NULL);
 }
 
-char	**takepaths(char **env)
+char	**takepaths(char **env, int enc)
 {
 	char	*pathstr;
 	char	**back;
-	int		enc;
+	char	*helper;
 
 	if (!env)
 		exit(EXIT_FAILURE);
-	enc = 0;
 	while (env[enc])
 	{
 		if (ft_strncmp("PATH=", env[enc], 5) == 0)
@@ -63,11 +62,13 @@ char	**takepaths(char **env)
 	if (!env[enc])
 		return (NULL);
 	pathstr = env[enc] + 5;
-	enc = 0;
 	back = ft_split(pathstr, ':');
+	enc = 0;
 	while (back[enc])
 	{
+		helper = back[enc];
 		back[enc] = ft_strjoin(back[enc], "/");
+		free(helper);
 		enc++;
 	}
 	return (back);
@@ -94,4 +95,21 @@ char	*pick(char**path, char*cmd)
 		pass++;
 	}
 	return (NULL);
+}
+
+void	clean_2(char **ptr)
+{
+	int	i;
+
+	i = 0;
+	if (!ptr)
+		return ;
+	while (ptr[i])
+	{
+		free(ptr[i]);
+		ptr[i] = NULL;
+		i++;
+	}
+	free(ptr);
+	ptr = NULL;
 }
