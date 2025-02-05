@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   first_last_cmd.c                                   :+:      :+:    :+:   */
+/*   first_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:41:36 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/04 17:25:14 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/05 10:30:02 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	first_command(char **av, char **paths, int *pipfd)
 
 	infile = open(av[1], O_RDONLY);
 	if (infile < 0)
-		return ;
+		exit(1);
 	if (dup2(infile, STDIN_FILENO) == -1 || \
 		dup2(pipfd[1], STDOUT_FILENO) == -1)
 		return ;
