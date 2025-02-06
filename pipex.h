@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/04 18:12:38 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:27:50 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,10 @@ char	*pick(char**path, char*cmd);
 void	first_command(char **av, char**paths, int *pipfd);
 char	**split(char*str);
 void	clean_2(char**ptr);
+void	pipecheck(int *pipefd);
+void	forkfaild(pid_t pid, int*pipefd);
+void	loop_childs(int ac, int *prev_pipe, char **av, char **paths);
+int		executing(int prev_pipe, char*cmd, char**paths, int outfile);
+// void	closingchild(int*pipefd, int *prev_pipe);
 
 #endif

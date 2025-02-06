@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:41:36 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/05 10:30:02 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:48:23 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	first_command(char **av, char **paths, int *pipfd)
 	if (dup2(infile, STDIN_FILENO) == -1 || \
 		dup2(pipfd[1], STDOUT_FILENO) == -1)
 		return ;
-	cmd = split(av[2]);
+	cmd = ft_split(av[2], ' ');
 	path = pick(paths, cmd[0]);
 	close(pipfd[0]);
 	if (!path)
