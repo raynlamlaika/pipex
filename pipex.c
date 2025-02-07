@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/06 14:08:02 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:34:30 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ int	main(int ac, char**av, char**ev)
 		perror("pipex");
 	if (pipe(pfd) == -1)
 		return (perror("pipex"), 0);
-	paths = takepaths(ev, 0);
-	if (!(paths))
-		return (close(inf), close(pfd[1]), close(pfd[0]), 0);
+	paths = takepaths(ev, 0); // no neet if it pass the absolte path
 	pid = fork();
 	if (pid == -1)
 		return (perror("pipex"), close(inf), close(pfd[1]), close(pfd[0]), 0);

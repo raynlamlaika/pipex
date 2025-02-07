@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 16:02:54 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/05 17:24:21 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:36:06 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,20 @@ char	*pick(char**path, char*cmd)
 {
 	int		pass;
 	char	*realpath;
+	char	**cmdpath;
 
 	pass = 0;
 	if (ft_strrchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
-			return (cmd);
+		{
+			cmdpath = ft_split(cmd, ' ');
+			return (cmdpath[0]);
+		}
 		return (NULL);
 	}
+	if(!path)
+		return (perror("pipex"), exit(1), NULL);
 	while (path[pass])
 	{
 		realpath = ft_strjoin(path[pass], cmd);
