@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/06 14:13:20 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/07 20:25:41 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 			return (perror("pipex"), close(prev_pipe), 0);
 		close(prev_pipe);
 		close(outfile);
-		command = ft_split(cmd, ' ');
+		command = split(cmd);
 		if (!command)
 			return (clean_2(command), 0);
 		path = pick(paths, command[0]);
+		if (!path)
+			return ;
 		if (execve(path, command, NULL) == -1)
 		{
 			perror("pipex");
@@ -38,11 +40,9 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 	return (0);
 }
 
-int	check(char **ev, int ac)
+int	check(int ac)
 {
 	if (ac < 5)
-		return (perror("pipex"), 0);
-	if (!ev)
 		return (perror("pipex"), 0);
 	return (1);
 }
@@ -66,7 +66,7 @@ void	checkinfile(char**av)
 	{
 		perror("pipex");
 		exit(1);
-	}	
+	}
 	close(infile);
 }
 
@@ -77,13 +77,14 @@ int	main(int ac, char **av, char **ev)
 	int		outfile;
 
 	prev_pipe = -1;
-	if (check(ev, ac) == 0)
+	if (check(ac) == 0)
 		return (0);
 	outfile = openoutfile(av, ac);
 	checkinfile(av);
 	paths = takepaths(ev, 0);
-	if (!paths)
-		return (perror("pipex"), close(outfile), 0);
+	// if (!paths)
+	// 	return (perror("pipex"), close(outfile), 0);
+	// fprintf(stderr, "thi aia is for the debug habibi\n");
 	loop_childs(ac, &prev_pipe, av, paths);
 	executing(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);

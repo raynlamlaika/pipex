@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_heper.c                                      :+:      :+:    :+:   */
+/*   heper_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/06 15:22:42 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/07 20:24:07 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ void	forkfaild(pid_t pid, int*pipefd)
 	}
 }
 
+void handelprevpipe(int *pipefd, int *prev_pipe)
+{
+	close(pipefd[1]);
+	if (*prev_pipe >= 0)
+		close(*prev_pipe);
+	*prev_pipe = pipefd[0];
+}
+
 void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 {
 	pid_t	pid;
@@ -54,12 +62,7 @@ void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 			exit(EXIT_SUCCESS);
 		}
 		else
-		{
-			close(pipefd[1]);
-			if (*prev_pipe >= 0)
-				close(*prev_pipe);
-			*prev_pipe = pipefd[0];
-		}
+			handelprevpipe(pipefd, prev_pipe);
 		i++;
 	}
 }
