@@ -13,14 +13,16 @@ BOBJ=$(BSRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(HEADER)
-	@$(CC) $(CFLAGS) $^ -o $(NAME)
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $(NAME)
 
 bonus: $(BONUSS)
 
-$(BONUSS): $(BOBJ) $(HEADER)
-	@$(CC) $(CFLAGS) $^ -o $(BONUSS)
+$(BONUSS): $(BOBJ)
+	$(CC) $(CFLAGS) $^ -o $(BONUSS)
 
+%.o: %.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $(OBJ) $(BOBJ)

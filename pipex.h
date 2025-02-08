@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/06 14:27:50 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/08 13:37:40 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strrchr(const char*str, int c);
 size_t	ft_strlen(const char *str);
 char	**takepaths(char**env, int enc);
 char	*pick(char**path, char*cmd);
-void	first_command(char **av, char**paths, int *pipfd);
+int    	first_command(char **av, char**paths, int *pipfd);
 char	**split(char*str);
 void	clean_2(char**ptr);
 void	pipecheck(int *pipefd);

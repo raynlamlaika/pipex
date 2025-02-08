@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/07 20:25:41 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:05:13 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 			return (clean_2(command), 0);
 		path = pick(paths, command[0]);
 		if (!path)
-			return ;
+			return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
 		if (execve(path, command, NULL) == -1)
 		{
 			perror("pipex");
@@ -89,6 +89,7 @@ int	main(int ac, char **av, char **ev)
 	executing(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);
 	close(outfile);
-	wait(NULL);
+	while (wait(NULL))
+		;
 	return (0);
 }

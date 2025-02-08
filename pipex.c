@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/07 17:45:19 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:02:51 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void	firstcmd(char **av, char **paths, int *pipfd)
 		write(2, "pipex: command not found\n", 25);
 		exit(1);
 	}
-	close(infile);
+	if (infile != 0)
+		close(infile);
 	close(pipfd[0]);
 	if (execve(path, cmd, NULL) == -1)
 		perror("pipex");
@@ -89,5 +90,7 @@ int	main(int ac, char**av, char**ev)
 		last_cmmd(av, ev, paths, pfd);
 	close(pfd[0]);
 	close(pfd[1]);
-	return (wait(NULL), clean_2(paths), 0);
+	wait(NULL);
+	wait(NULL);
+	return (clean_2(paths), 0);
 }
