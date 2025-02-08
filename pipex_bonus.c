@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/08 16:05:13 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/08 20:00:52 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,20 +76,20 @@ int	main(int ac, char **av, char **ev)
 	int		prev_pipe;
 	int		outfile;
 
+	if (ft_strcmp("here_doc", av[1], 9) == 0)
+		heredoc(ac, av, ev);
 	prev_pipe = -1;
 	if (check(ac) == 0)
 		return (0);
 	outfile = openoutfile(av, ac);
 	checkinfile(av);
 	paths = takepaths(ev, 0);
-	// if (!paths)
-	// 	return (perror("pipex"), close(outfile), 0);
-	// fprintf(stderr, "thi aia is for the debug habibi\n");
 	loop_childs(ac, &prev_pipe, av, paths);
 	executing(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);
 	close(outfile);
-	while (wait(NULL))
+	int status;
+	while (wait(&status) > 0)
 		;
 	return (0);
 }
