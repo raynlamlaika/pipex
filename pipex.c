@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 10:49:31 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/08 16:02:51 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:19:49 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ void	firstcmd(char **av, char **paths, int *pipfd)
 		close(infile);
 	close(pipfd[0]);
 	if (execve(path, cmd, NULL) == -1)
-		perror("pipex");
-	exit(1);
-	return ;
+		return (perror("pipex"), exit(1));
 }
 
 int	last_cmmd(char**av, char **ev, char**paths, int *pipfd)

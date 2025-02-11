@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 05:18:32 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:18:26 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,32 @@ void	forkfaild(pid_t pid, int*pipefd)
 	}
 }
 
-void handelprevpipe(int *pipefd, int *prev_pipe)
+void	handelprevpipe(int *pipefd, int *prev_pipe)
 {
 	close(pipefd[1]);
 	close(*prev_pipe);
 	*prev_pipe = pipefd[0];
 }
 
-int	last_child(int prev_pipe, char*cmd, char**paths, int outfile)
+int	last_child(int prvpipe, char*cmd, char**paths, int outf)
 {
 	char	**command;
 	char	*path;
 
 	if (fork() == 0)
 	{
-		if (dup2(prev_pipe, STDIN_FILENO) == -1)
+		if (dup2(prvpipe, STDIN_FILENO) == -1)
 			return (perror("pipex"), 0);
-		close(prev_pipe);
-		if (dup2(outfile, STDOUT_FILENO) == -1)
-			return (perror("pipex"), close(prev_pipe), 0);
-		close(outfile);
+		close(prvpipe);
+		if (dup2(outf, STDOUT_FILENO) == -1)
+			return (perror("pipex"), close(prvpipe), 0);
+		close(outf);
 		command = split(cmd);
 		if (!command)
 			return (clean_2(command), 0);
 		path = pick(paths, command[0]);
 		if (!path)
-			return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
-		fprintf(stderr, "\n\n\nthissis the cmd : |%s| \nthe output: [%d] \nprev_pipe: [%d] \nthe path: |%s|\n", cmd, outfile, prev_pipe, path);
+			return (perror("pipex"), close(prvpipe), close(outf), exit(1), 0);
 		if (execve(path, command, NULL) == -1)
 		{
 			perror("pipex");

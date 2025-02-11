@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 20:47:46 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/01/26 16:03:18 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:29:21 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-static char	*ft_strdup(const char*source)
+char	*ft_strdup(const char*source)
 {
 	size_t	o;
 	char	*sp;
