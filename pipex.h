@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 03:42:31 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 04:23:29 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ char	*get_next_line(int fd);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strchr(const char *str, int c);
 size_t	ft_strlen(const char *str);
-
+void	handelprevpipe(int *pipefd, int *prev_pipe);
+void	pipecheck(int *pipefd);
 #endif

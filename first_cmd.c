@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 09:41:36 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 03:39:25 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 05:17:11 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	first_command(char **av, char **paths, int *pipfd)
 	close(pipfd[1]);
 	cmd = ft_split(av[2], ' ');
 	path = pick(paths, cmd[0]);
+	fprintf(stderr, "thissis the cmd : |%s| \nthe pipfd[1] : [%d] \npipifd[0]: [%d] \nthe path: |%s|\n", cmd[0], pipfd[1], pipfd[0], path);
 	if (!path)
 		return (perror("pipex"),close(infile), exit(1), 0);
 	execve(path, cmd, NULL);

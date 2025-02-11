@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 03:43:15 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 05:15:04 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 
 	if (dup2(prev_pipe, STDIN_FILENO) == -1)
 		return (perror("pipex"), 0);
+	close(prev_pipe);
 	if (dup2(outfile, STDOUT_FILENO) == -1)
 		return (perror("pipex"), close(prev_pipe), 0);
-	close(prev_pipe);
 	close(outfile);
 	command = split(cmd);
 	if (!command)
@@ -30,6 +30,7 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 	path = pick(paths, command[0]);
 	if (!path)
 		return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
+	fprintf(stderr, "\n\nthissis the cmd : |%s| \nthe output: [%d] \nprev_pipe: [%d] \nthe path: |%s|\n", cmd, outfile, prev_pipe, path);
 	if (execve(path, command, NULL) == -1)
 	{
 		perror("pipex");
@@ -52,6 +53,7 @@ int	openoutfile(char **av, int ac)
 	outfile = open(av[ac - 1], O_CREAT | O_TRUNC | O_RDWR, 0644);
 	if (outfile == -1)
 		return (perror("pipex"), exit(1), 0);
+	// close(outfile);
 	return (outfile);
 }
 
@@ -82,12 +84,13 @@ int	main(int ac, char **av, char **ev)
 	outfile = openoutfile(av, ac);
 	checkinfile(av);
 	paths = takepaths(ev, 0);
+	// close(0);
 	loop_childs(ac, &prev_pipe, av, paths);
 	last_child(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);
 	close(outfile);
+	// close(0);
 	while(waitpid(-1, NULL, 0) != -1)
 		;
-	// int status;
 	return (0);
 }

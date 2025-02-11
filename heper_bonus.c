@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 03:42:21 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 05:18:32 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	forkfaild(pid_t pid, int*pipefd)
 void handelprevpipe(int *pipefd, int *prev_pipe)
 {
 	close(pipefd[1]);
-	if (*prev_pipe >= 0)
-		close(*prev_pipe);
+	close(*prev_pipe);
 	*prev_pipe = pipefd[0];
 }
 
@@ -49,9 +48,9 @@ int	last_child(int prev_pipe, char*cmd, char**paths, int outfile)
 	{
 		if (dup2(prev_pipe, STDIN_FILENO) == -1)
 			return (perror("pipex"), 0);
+		close(prev_pipe);
 		if (dup2(outfile, STDOUT_FILENO) == -1)
 			return (perror("pipex"), close(prev_pipe), 0);
-		close(prev_pipe);
 		close(outfile);
 		command = split(cmd);
 		if (!command)
@@ -59,6 +58,7 @@ int	last_child(int prev_pipe, char*cmd, char**paths, int outfile)
 		path = pick(paths, command[0]);
 		if (!path)
 			return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
+		fprintf(stderr, "\n\n\nthissis the cmd : |%s| \nthe output: [%d] \nprev_pipe: [%d] \nthe path: |%s|\n", cmd, outfile, prev_pipe, path);
 		if (execve(path, command, NULL) == -1)
 		{
 			perror("pipex");
@@ -75,7 +75,7 @@ void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 	int		pipefd[2];
 
 	i = 1;
-	while (i < (ac - 2))
+	while (i < (ac - 3))
 	{
 		pipecheck(pipefd);
 		pid = fork();
@@ -84,15 +84,14 @@ void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 		{
 			if (i == 1)
 				first_command(av, paths, pipefd);
-			else
+			if (i > 1)
+			{
+				close(pipefd[0]);
 				executing(*prev_pipe, av[i], paths, pipefd[1]);
-			close(pipefd[0]);
-			exit(EXIT_SUCCESS);
+			}
 		}
 		else
 			handelprevpipe(pipefd, prev_pipe);
 		i++;
 	}
-
-
 }
