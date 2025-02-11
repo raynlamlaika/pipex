@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/08 19:10:12 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 03:42:21 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,34 @@ void handelprevpipe(int *pipefd, int *prev_pipe)
 	*prev_pipe = pipefd[0];
 }
 
+int	last_child(int prev_pipe, char*cmd, char**paths, int outfile)
+{
+	char	**command;
+	char	*path;
+
+	if (fork() == 0)
+	{
+		if (dup2(prev_pipe, STDIN_FILENO) == -1)
+			return (perror("pipex"), 0);
+		if (dup2(outfile, STDOUT_FILENO) == -1)
+			return (perror("pipex"), close(prev_pipe), 0);
+		close(prev_pipe);
+		close(outfile);
+		command = split(cmd);
+		if (!command)
+			return (clean_2(command), 0);
+		path = pick(paths, command[0]);
+		if (!path)
+			return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
+		if (execve(path, command, NULL) == -1)
+		{
+			perror("pipex");
+			exit(1);
+		}
+	}
+	return (0);
+}
+
 void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 {
 	pid_t	pid;
@@ -65,4 +93,6 @@ void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 			handelprevpipe(pipefd, prev_pipe);
 		i++;
 	}
+
+
 }

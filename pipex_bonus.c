@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/08 20:00:52 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/11 03:43:15 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,23 @@ int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 	char	**command;
 	char	*path;
 
-	if (fork() == 0)
+
+	if (dup2(prev_pipe, STDIN_FILENO) == -1)
+		return (perror("pipex"), 0);
+	if (dup2(outfile, STDOUT_FILENO) == -1)
+		return (perror("pipex"), close(prev_pipe), 0);
+	close(prev_pipe);
+	close(outfile);
+	command = split(cmd);
+	if (!command)
+		return (clean_2(command), 0);
+	path = pick(paths, command[0]);
+	if (!path)
+		return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
+	if (execve(path, command, NULL) == -1)
 	{
-		if (dup2(prev_pipe, STDIN_FILENO) == -1)
-			return (perror("pipex"), 0);
-		if (dup2(outfile, STDOUT_FILENO) == -1)
-			return (perror("pipex"), close(prev_pipe), 0);
-		close(prev_pipe);
-		close(outfile);
-		command = split(cmd);
-		if (!command)
-			return (clean_2(command), 0);
-		path = pick(paths, command[0]);
-		if (!path)
-			return (perror("pipex"), close(prev_pipe), close(outfile), exit(1), 0);
-		if (execve(path, command, NULL) == -1)
-		{
-			perror("pipex");
-			exit(1);
-		}
+		perror("pipex");
+		exit(1);
 	}
 	return (0);
 }
@@ -76,8 +74,8 @@ int	main(int ac, char **av, char **ev)
 	int		prev_pipe;
 	int		outfile;
 
-	if (ft_strcmp("here_doc", av[1], 9) == 0)
-		heredoc(ac, av, ev);
+	// if (ft_strcmp("here_doc", av[1], 9) == 0)
+	// 	heredoc(ac, av, ev);
 	prev_pipe = -1;
 	if (check(ac) == 0)
 		return (0);
@@ -85,11 +83,11 @@ int	main(int ac, char **av, char **ev)
 	checkinfile(av);
 	paths = takepaths(ev, 0);
 	loop_childs(ac, &prev_pipe, av, paths);
-	executing(prev_pipe, av[ac - 2], paths, outfile);
+	last_child(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);
 	close(outfile);
-	int status;
-	while (wait(&status) > 0)
+	while(waitpid(-1, NULL, 0) != -1)
 		;
+	// int status;
 	return (0);
 }
