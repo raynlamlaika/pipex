@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/14 18:10:55 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/14 22:49:17 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,17 @@ int	main(int ac, char **av, char **ev)
 	int		prev_pipe;
 	int		outfile;
 
-	if (ft_strncmp("here_doc", av[1], 9) == 0)
-	{
-        heredoc(ac, av);
-	}   
 	prev_pipe = -1;
 	if (check(ac) == 0)
 		return (0);
+	paths = takepaths(ev, 0);
+	if (ft_strncmp("here_doc", av[1], 9) == 0)
+	{
+		heredoc(ac, av, paths);
+		return (0);
+	}
 	outfile = openoutfile(av, ac);
 	checkinfile(av);
-	paths = takepaths(ev, 0);
 	loop_childs(ac, &prev_pipe, av, paths);
 	last_child(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);

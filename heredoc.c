@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 20:00:59 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/14 19:55:58 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/14 22:50:57 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	search_search(char *next, char *limiter)
 	return (result);
 }
 
-void lines(int fd, char *limiter)
+void	lines(int fd, char *limiter)
 {
 	char	*next;
 
@@ -45,33 +45,76 @@ void lines(int fd, char *limiter)
 	}
 }
 
-int heredoc(int ac, char **av)
+int	first_cmd(char **av, char **paths, int *pipfd, int infile)
 {
-	char *limiter;
-	int pipfd[2];
+	char	**cmd;
+	char	*path;
+
+	if (infile < 0)
+		exit(1);
+	if (dup2(infile, STDIN_FILENO) == -1)
+		return (perror("pipex"), exit(1), 0);
+	close(infile);
+	if (dup2(pipfd[1], STDOUT_FILENO) == -1)
+		return (perror("pipex"), close(pipfd[1]), exit(1), 0);
+	close(pipfd[1]);
+	close(pipfd[0]);
+	cmd = ft_split(av[3], ' ');
+	path = pick(paths, cmd[0]);
+	if (!path)
+		return (perror("pipex"), close(infile), exit(1), 0);
+	execve(path, cmd, NULL);
+	exit(1);
+	return (1);
+}
+
+int	last_cmmd(char**av, char**paths, int *pipfd)
+{
+	int		outfile;
+	char	**cmd;
+	char	*path;
+
+	outfile = open(av[5], O_CREAT | O_APPEND | O_RDWR, 0644);
+	if (outfile == -1)
+		return (perror("pipex"), 0);
+	if ((dup2(pipfd[0], STDIN_FILENO) == -1))
+		return (close(pipfd[0]), close(pipfd[1]), exit(1), 0);
+	if (dup2(outfile, STDOUT_FILENO) == -1)
+		return (close(outfile), close(pipfd[1]), exit(1), 0);
+	close(pipfd[1]);
+	close(outfile);
+	cmd = split(av[4]);
+	path = pick(paths, cmd[0]);
+	if (!path)
+		return (perror("pipex"), clean_2(cmd), 0);
+	if (execve(path, cmd, NULL) == -1)
+		perror("pipex");
+	exit(1);
+}
+
+int	heredoc(int ac, char **av, char**paths)
+{
+	char	*limiter;
+	int		pipfd[2];
+	int		newpip[2];
 
 	if (ac < 6)
-	{
-		fprintf(stderr,"Usage: ./pipex here_doc LIMITER cmd1 cmd2 file\n");
-		return (1);
-	}
+		return (perror("pipex"), 1);
 	limiter = av[2];
 	if (pipe(pipfd) == -1)
-	{
-		perror("pipe");
-		return (1);
-	}
+		return (perror("pipe"), 1);
 	lines(pipfd[1], limiter);
 	close(pipfd[1]);
-
-	char *gg =get_next_line(pipfd[0]);
-	printf("this is the thing %s\n", gg);
-	// the pipefd hold the  data pip[1] that we can read it and pass it 
-	//exectute the command into the pip[] First one
-
-	//second one
-
-
-
+	if (fork() == 0)
+	{
+		pipecheck(newpip);
+		first_cmd(av, paths, newpip, pipfd[0]);
+	}
+	if (fork() == 0)
+		last_cmmd(av, paths, pipfd);
+	close(pipfd[0]);
+	wait(NULL);
+	wait(NULL);
+	clean_2(paths);
 	return (0);
 }

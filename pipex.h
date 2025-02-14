@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/14 18:11:12 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/14 22:51:13 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #  define BUFFER_SIZE 10
 # endif
 
-int heredoc(int ac, char **av);
+int		heredoc(int ac, char **av, char**paths);
 char	**ft_split(char const*s, char c);
 char	*ft_strjoin(char const*s1, char const*s2);
 int		ft_strncmp(const char*str1, const char*str2, size_t num);
