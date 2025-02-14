@@ -7,8 +7,7 @@ CC=cc
 HEADER=pipex.h
 CFLAGS=-Wall -Werror -Wextra
 
-BSRC= pipex_bonus.c help.c ft_split.c ft_strjoin.c first_cmd.c heper_bonus.c split.c heredoc.c get_next_line_bonus.c get_next_line_utils_bonus.c
-
+BSRC= pipex_bonus.c help.c ft_split.c ft_strjoin.c first_cmd.c heper_bonus.c split.c heredoc.c get_next_line_bonus.c get_next_line_utils_bonus.c 
 BOBJ=$(BSRC:.c=.o)
 
 all: $(NAME)

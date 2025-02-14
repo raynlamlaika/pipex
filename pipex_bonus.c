@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 09:36:19 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:10:55 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,9 @@ int	main(int ac, char **av, char **ev)
 	int		outfile;
 
 	if (ft_strncmp("here_doc", av[1], 9) == 0)
-		heredoc(ac, av);
+	{
+        heredoc(ac, av);
+	}   
 	prev_pipe = -1;
 	if (check(ac) == 0)
 		return (0);
@@ -85,7 +87,7 @@ int	main(int ac, char **av, char **ev)
 	last_child(prev_pipe, av[ac - 2], paths, outfile);
 	close(prev_pipe);
 	close(outfile);
-	while (waitpid(-1, NULL, 0) != -1)
+	while (wait(NULL) != -1)
 		;
 	return (0);
 }

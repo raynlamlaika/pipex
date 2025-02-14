@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 09:18:26 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:59:21 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	loop_childs(int ac, int *prev_pipe, char **av, char **paths)
 			if (i > 1)
 			{
 				close(pipefd[0]);
-				executing(*prev_pipe, av[i], paths, pipefd[1]);
+				executing(*prev_pipe, av[i + 1], paths, pipefd[1]);
 			}
 		}
 		else

@@ -6,59 +6,72 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 20:00:59 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 10:10:19 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/14 19:55:58 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	search_search(char *next, char *limiter)
+static int	search_search(char *next, char *limiter)
 {
-	limiter = ft_strjoin(limiter, "\n");
-	if (ft_strncmp(next, limiter, ft_strlen(limiter)) == 0)
-	{
-		printf("sf saliina");
-		exit(0);
-	}
-	return (1);
+	char	*full_limiter;
+	int		result;
+
+	full_limiter = ft_strjoin(limiter, "\n");
+	if (!full_limiter)
+		return (exit(1), 1);
+	result = ft_strncmp(next, full_limiter, ft_strlen(full_limiter));
+	free(full_limiter);
+	return (result);
 }
 
-char	**moooves(int i, char *limiter)
+void lines(int fd, char *limiter)
 {
-	char	**moves;
-	char	*tmpp;
 	char	*next;
-	char	*oprt;
 
-	oprt = ft_strdup("");
-	if (!oprt)
-		return (free(oprt), NULL);
-	write(1, "pipex_herdoc> ", 14);
-	next = get_next_line(0);
-	while (next)
+	while (1)
 	{
-		i = search_search(next, limiter);
-		tmpp = oprt;
-		oprt = ft_strjoin(oprt, next);
-		if (!oprt || i == 0)
-			return (free(oprt), free(next), free(tmpp), exit(1), NULL);
-		free(tmpp);
-		free(next);
-		write(1, "pipex_herdoc >", 14);
+		write(1, "pipex_heredoc >> ", 17);
 		next = get_next_line(0);
+		if (!next)
+			break ;
+		if (search_search(next, limiter) == 0)
+		{
+			free(next);
+			break ;
+		}
+		write(fd, next, ft_strlen(next));
+		free(next);
 	}
-	moves = ft_split(oprt, '\n');
-	return (free(oprt), free(next), moves);
 }
 
-void	heredoc(int ac, char**av)
+int heredoc(int ac, char **av)
 {
-	char	*limiter;
+	char *limiter;
+	int pipfd[2];
 
+	if (ac < 6)
+	{
+		fprintf(stderr,"Usage: ./pipex here_doc LIMITER cmd1 cmd2 file\n");
+		return (1);
+	}
 	limiter = av[2];
-	ac = 0;
-	printf("so this is the limiter %s\n", limiter);
-	moooves(0, limiter);
-	exit(0);
-	return ;
+	if (pipe(pipfd) == -1)
+	{
+		perror("pipe");
+		return (1);
+	}
+	lines(pipfd[1], limiter);
+	close(pipfd[1]);
+
+	char *gg =get_next_line(pipfd[0]);
+	printf("this is the thing %s\n", gg);
+	// the pipefd hold the  data pip[1] that we can read it and pass it 
+	//exectute the command into the pip[] First one
+
+	//second one
+
+
+
+	return (0);
 }
