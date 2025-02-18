@@ -6,7 +6,7 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 20:00:59 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/18 12:10:56 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:21:32 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	heredoc(int ac, char **av, char **paths)
 		return (perror("pipe"), 1);
 	if (fork() == 0)
 		executing(pipfd[0], av[3], paths, newpip[1]);
+	close(pipfd[0]);
+	close(newpip[1]);
 	if (fork() == 0)
 		last_cmmd(av, paths, newpip);
 	close(pipfd[0]);
