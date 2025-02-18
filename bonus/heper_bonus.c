@@ -6,11 +6,11 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:03:11 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/13 17:59:21 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:16:29 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipexb.h"
 
 void	pipecheck(int *pipefd)
 {

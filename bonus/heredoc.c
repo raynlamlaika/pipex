@@ -6,11 +6,11 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 20:00:59 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/14 22:50:57 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 12:10:56 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipexb.h"
 
 static int	search_search(char *next, char *limiter)
 {
@@ -25,7 +25,7 @@ static int	search_search(char *next, char *limiter)
 	return (result);
 }
 
-void	lines(int fd, char *limiter)
+static void	lines(int fd, char *limiter)
 {
 	char	*next;
 
@@ -45,30 +45,7 @@ void	lines(int fd, char *limiter)
 	}
 }
 
-int	first_cmd(char **av, char **paths, int *pipfd, int infile)
-{
-	char	**cmd;
-	char	*path;
-
-	if (infile < 0)
-		exit(1);
-	if (dup2(infile, STDIN_FILENO) == -1)
-		return (perror("pipex"), exit(1), 0);
-	close(infile);
-	if (dup2(pipfd[1], STDOUT_FILENO) == -1)
-		return (perror("pipex"), close(pipfd[1]), exit(1), 0);
-	close(pipfd[1]);
-	close(pipfd[0]);
-	cmd = ft_split(av[3], ' ');
-	path = pick(paths, cmd[0]);
-	if (!path)
-		return (perror("pipex"), close(infile), exit(1), 0);
-	execve(path, cmd, NULL);
-	exit(1);
-	return (1);
-}
-
-int	last_cmmd(char**av, char**paths, int *pipfd)
+static int	last_cmmd(char **av, char **paths, int *pipfd)
 {
 	int		outfile;
 	char	**cmd;
@@ -77,22 +54,26 @@ int	last_cmmd(char**av, char**paths, int *pipfd)
 	outfile = open(av[5], O_CREAT | O_APPEND | O_RDWR, 0644);
 	if (outfile == -1)
 		return (perror("pipex"), 0);
-	if ((dup2(pipfd[0], STDIN_FILENO) == -1))
-		return (close(pipfd[0]), close(pipfd[1]), exit(1), 0);
+	if (dup2(pipfd[0], STDIN_FILENO) == -1)
+		return (close(pipfd[0]), close(outfile), 0);
 	if (dup2(outfile, STDOUT_FILENO) == -1)
-		return (close(outfile), close(pipfd[1]), exit(1), 0);
-	close(pipfd[1]);
+		return (close(outfile), close(pipfd[0]), 0);
+	close(pipfd[0]);
 	close(outfile);
 	cmd = split(av[4]);
 	path = pick(paths, cmd[0]);
 	if (!path)
 		return (perror("pipex"), clean_2(cmd), 0);
 	if (execve(path, cmd, NULL) == -1)
+	{
 		perror("pipex");
-	exit(1);
+		clean_2(cmd);
+		exit(1);
+	}
+	return (0);
 }
 
-int	heredoc(int ac, char **av, char**paths)
+int	heredoc(int ac, char **av, char **paths)
 {
 	char	*limiter;
 	int		pipfd[2];
@@ -105,16 +86,16 @@ int	heredoc(int ac, char **av, char**paths)
 		return (perror("pipe"), 1);
 	lines(pipfd[1], limiter);
 	close(pipfd[1]);
+	if (pipe(newpip) == -1)
+		return (perror("pipe"), 1);
 	if (fork() == 0)
-	{
-		pipecheck(newpip);
-		first_cmd(av, paths, newpip, pipfd[0]);
-	}
+		executing(pipfd[0], av[3], paths, newpip[1]);
 	if (fork() == 0)
-		last_cmmd(av, paths, pipfd);
+		last_cmmd(av, paths, newpip);
 	close(pipfd[0]);
-	wait(NULL);
-	wait(NULL);
+	close(newpip[0]);
+	close(newpip[1]);
 	clean_2(paths);
+	wait(NULL);
 	return (0);
 }

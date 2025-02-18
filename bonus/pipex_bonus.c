@@ -6,11 +6,11 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:13:22 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/17 01:31:17 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:16:36 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipexb.h"
 
 int	executing(int prev_pipe, char*cmd, char**paths, int outfile)
 {

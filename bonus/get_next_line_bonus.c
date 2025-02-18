@@ -6,11 +6,11 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 18:47:42 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/08 20:09:26 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:16:14 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipexb.h"
 
 static void	freedd(char **point)
 {

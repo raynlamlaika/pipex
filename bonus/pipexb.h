@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipexb.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/20 14:38:23 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/18 11:12:37 by rlamlaik         ###   ########.fr       */
+/*   Created: 2025/02/18 11:09:43 by rlamlaik          #+#    #+#             */
+/*   Updated: 2025/02/18 11:15:50 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEXB_H
+# define PIPEXB_H
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>

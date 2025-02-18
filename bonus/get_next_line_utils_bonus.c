@@ -6,11 +6,11 @@
 /*   By: rlamlaik <rlamlaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 22:51:37 by rlamlaik          #+#    #+#             */
-/*   Updated: 2025/02/11 09:42:22 by rlamlaik         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:16:16 by rlamlaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipexb.h"
 
 char	*ft_strchr(const char *str, int c)
 {
